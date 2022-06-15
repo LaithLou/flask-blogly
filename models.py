@@ -18,7 +18,7 @@ class User(db.Model):
 
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
-  first_name = db.Column(db.String(), nullable = False)
-  last_name = db.Column(db.String(), nullable = False)
-  img_url = db.Column(db.String(), nullable= True, unique =True, default='')
+  first_name = db.Column(db.Text, nullable = False)
+  last_name = db.Column(db.Text, nullable = False)
+  img_url = db.Column(db.Text, nullable= True, unique =True, default='')
 
