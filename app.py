@@ -9,13 +9,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 
 connect_db(app)
-
+db.create_all()
 
 @app.get('/')
 def list_user():
     """ it lists users """
 
     users = User.query.all()
-    return render_template('list.html', users = users)
+    return render_template('list.html', users= users)
 
 
