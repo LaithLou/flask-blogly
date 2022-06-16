@@ -1,7 +1,6 @@
 """Blogly application."""
 from flask import Flask, request, render_template, redirect
-from models import db, connect_db, User
-
+from models import db, connect_db, User, Posts
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
@@ -15,7 +14,7 @@ db.create_all()
 @app.get('/')
 def take_to_user_page():
     """Redirects to users page
-    
+
     """
 
     return redirect('/users')
@@ -24,7 +23,7 @@ def take_to_user_page():
 @app.get('/users')
 def list_users():
     """ Home page lists all the users
-    
+
     """
 
     users = User.query.all()
@@ -35,7 +34,7 @@ def list_users():
 @app.get('/users/new')
 def show_add_user_form():
     """Shows the create new user form
-    
+
     """
 
     return render_template('adding_user.html')
@@ -48,16 +47,16 @@ def get_form_data_for_new_user():
         - From form data, creates a new User instance
         - Adds the instance to the database
         - Returns user to users homepage
-    
+
     """
 
     fname = request.form['first_name']
     lname = request.form['last_name']
     image_url = request.form['image_url']
-    
-    
+
+
     new_user = User(first_name=fname, last_name=lname, img_url=image_url)
-    
+
 
 
     db.session.add(new_user)
@@ -81,7 +80,7 @@ def show_profile(id):
 def show_edit_page(id):
     """Shows User's Edit page
         - Returns 404 if the user id does not exist
-    
+
     """
 
     user = User.query.get_or_404(id)
@@ -107,7 +106,7 @@ def edit_profile(id):
 
 @app.post('/users/<id>/delete')
 def delete_user(id):
-    """ Deletes User 
+    """ Deletes User
         -Returns user to users homepage
     """
 
@@ -121,8 +120,23 @@ def delete_user(id):
 @app.get('/users/<int:id>/posts/new')
 def show_new_post_form(id):
     """Shows form to make a new post
-        - Takes user ID 
+        - Takes user ID
         - Shows the form fields to make a new post
     """
     user = User.query.get_or_404(id)
     return render_template('new_post_form.html', user=user)
+
+@app.post('/users/<int:id>/posts/new')
+def handels_new_post(id):
+    """ handels a new post entry """
+
+    p_title = request.form['post_title']
+    p_content = request.form['post_content']
+
+    new_post = Posts(title=p_title,content=p_content,user_id=id)
+
+    db.session.add(new_post)
+    db.session.commit()
+
+    return redirect(f"/users/{id}")
+
