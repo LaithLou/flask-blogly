@@ -10,7 +10,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 connect_db(app)
 db.create_all()
 
-
+### home page related routes ###
 @app.get('/')
 def take_to_user_page():
     """Redirects to users page
@@ -31,6 +31,7 @@ def list_users():
     return render_template('list.html', users= users)
 
 
+### users related routes ###
 @app.get('/users/new')
 def show_add_user_form():
     """Shows the create new user form
@@ -53,7 +54,7 @@ def get_form_data_for_new_user():
     fname = request.form['first_name']
     lname = request.form['last_name']
     image_url = request.form['image_url']
-
+    image_url = str(image_url) if image_url else None
 
     new_user = User(first_name=fname, last_name=lname, img_url=image_url)
 
@@ -117,6 +118,9 @@ def delete_user(id):
 
     return redirect('/users')
 
+
+### post related routs ###
+
 @app.get('/users/<int:id>/posts/new')
 def show_new_post_form(id):
     """Shows form to make a new post
@@ -140,3 +144,46 @@ def handels_new_post(id):
 
     return redirect(f"/users/{id}")
 
+
+@app.get('/posts/<int:id>')
+def show_post_page(id):
+    """ shows the post's page"""
+
+    post = Posts.query.get_or_404(id)
+
+    return render_template('post_page.html',post=post,user=post.user)
+
+
+@app.post('/posts/<int:id>/delete')
+def delete_post(id):
+    """ deletes post by id"""
+
+
+    post = Posts.query.get_or_404(id)
+    user_id = post.user.id
+    db.session.delete(post)
+
+    db.session.commit()
+
+    return redirect(f"/users/{user_id}")
+
+
+@app.get('/posts/<int:id>/edit')
+def edit_post(id):
+    """shows edit post page"""
+    post = Posts.query.get_or_404(id)
+
+    return render_template('edit_post_page.html',post=post,user=post.user)
+
+@app.post('/posts/<int:id>/edit')
+def handles_post_edit(id):
+    """edits a post title and/or content"""
+
+    post= Posts.query.get_or_404(id)
+
+    post.title = request.form['post_title']
+    post.content = request.form['post_content']
+
+    db.session.commit()
+
+    return redirect(f"/posts/{post.id}")

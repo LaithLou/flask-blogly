@@ -1,5 +1,4 @@
 """Models for Blogly."""
-import datetime
 from flask_sqlalchemy import SQLAlchemy
 from traitlets import default
 
@@ -41,7 +40,7 @@ class Posts(db.Model):
 
     title = db.Column(db.Text, nullable=False)
     content = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now())
+    created_at = db.Column(db.DateTime, nullable=False, default=db.func.now())
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
