@@ -54,8 +54,11 @@ def get_form_data_for_new_user():
     fname = request.form['first_name']
     lname = request.form['last_name']
     image_url = request.form['image_url']
+    
+    
+    new_user = User(first_name=fname, last_name=lname, img_url=image_url)
+    
 
-    new_user = User(first_name=fname, last_name = lname, img_url = image_url)
 
     db.session.add(new_user)
     db.session.commit()
@@ -114,3 +117,12 @@ def delete_user(id):
     db.session.commit()
 
     return redirect('/users')
+
+@app.get('/users/<int:id>/posts/new')
+def show_new_post_form(id):
+    """Shows form to make a new post
+        - Takes user ID 
+        - Shows the form fields to make a new post
+    """
+    user = User.query.get_or_404(id)
+    return render_template('new_post_form.html', user=user)
