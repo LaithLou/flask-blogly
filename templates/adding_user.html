@@ -6,8 +6,8 @@
 <h1>Create User!</h1>
 <form action="/users/new" method="POST">
     <div>
-        <label>First Name:</label>
-        <input name="first_name" placeholder="John">
+        <label for="first_name">First Name:</label>
+        <input name="first_name" id="first_name" placeholder="John">
     </div>
     <div>
         <label>Last Name:</label>
@@ -19,7 +19,7 @@
         <input name="image_url" placeholder="Enter an image of this user">
     </div>
 
-    <button type="submit"> Add User </button>
+    <button type="submit">Add User</button>
 </form>
 
 {% endblock content %}
