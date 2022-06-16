@@ -7,14 +7,18 @@ db = SQLAlchemy()
 
 
 def connect_db(app):
-    """Connect to database."""
+    """Connect to database.
+	
+	"""
 
     db.app = app
     db.init_app(app)
 
 
 class User(db.Model):
-    """User table properties"""
+    """ User properties 
+	
+	"""
 
     __tablename__ = "users"
 

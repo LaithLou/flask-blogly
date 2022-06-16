@@ -11,28 +11,45 @@ app.config['SQLALCHEMY_ECHO'] = True
 connect_db(app)
 db.create_all()
 
+
 @app.get('/')
 def take_to_user_page():
-    """Redirects to users page"""
+    """Redirects to users page
+    
+    """
+
     return redirect('/users')
+
 
 @app.get('/users')
 def list_users():
-    """ home page : it lists all users """
+    """ Home page lists all the users
+    
+    """
 
     users = User.query.all()
+
     return render_template('list.html', users= users)
+
 
 @app.get('/users/new')
 def show_add_user_form():
-    """Render the add user form template"""
+    """Shows the create new user form
+    
+    """
+
     return render_template('adding_user.html')
 
 
-# TODO: pick a better name more explicit
+
 @app.post('/users/new')
-def get_form_data():
-    """Takes the form elements and post them on users list""" # handel form submittion
+def get_form_data_for_new_user():
+    """ Takes form data
+        - From form data, creates a new User instance
+        - Adds the instance to the database
+        - Returns user to users homepage
+    
+    """
 
     fname = request.form['first_name']
     lname = request.form['last_name']
@@ -45,25 +62,37 @@ def get_form_data():
 
     return redirect ('/users')
 
+
 @app.get('/users/<int:id>')
 def show_profile(id):
-    """Shows User Page"""
+    """Shows User Profile
+        - Returns 404 if the user id does not exist
+
+    """
+
     user = User.query.get_or_404(id)
     return render_template('profile.html', user=user)
 
-@app.get('/users/<id>/edit') # use int:id
+
+@app.get('/users/<int:id>/edit')
 def show_edit_page(id):
-    """Shows User's Edit page"""
+    """Shows User's Edit page
+        - Returns 404 if the user id does not exist
+    
+    """
+
     user = User.query.get_or_404(id)
     return render_template('edit.html',user=user)
 
-@app.post('/users/<id>/edit') # use int:id
+
+@app.post('/users/<int:id>/edit')
 def edit_profile(id):
-    """ edits user's profile page take back
-    to user specific page""" # updating existing user
+    """ Makes edits to user profile
+        - Uses the form data to update user profile
+        - Takes user back to users homepage
+    """
 
-
-    user = User.query.get(id)
+    user = User.query.get_or_404(id)
     user.first_name = request.form['first_name']
     user.last_name = request.form['last_name']
     user.img_url = request.form['image_url']
@@ -75,9 +104,11 @@ def edit_profile(id):
 
 @app.post('/users/<id>/delete')
 def delete_user(id):
-    """deletes user take back to users page"""
+    """ Deletes User 
+        -Returns user to users homepage
+    """
 
-    user = User.query.get(id) #404
+    user = User.query.get_or_404(id)
     db.session.delete(user)
 
     db.session.commit()
