@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %} New User {% endblock title %}
+{% block title %} Add A Post {% endblock title %}
 
 {% block content %}
     <h1>Add A Post!</h1>
@@ -11,14 +11,15 @@
         </div>
         <div>
             <label for="post_content">Content:</label>
-            <textarea name="post_content" id="post_content" rows="4" cols="50">
-
-            </textarea>
+            <p>
+                <textarea name="post_content" id="post_content" rows="4" cols="50"></textarea>
+            </p>
+            
         </div>
 
         <button type="submit">Add Post</button>
     </form>
-    <form action="/users/{{user.id}}">
+    <form action="/users/{{ user.id }}">
         <button type="submit">Cancel</button>
     </form>
 
